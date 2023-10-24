@@ -32,7 +32,7 @@ paths:
         '400':
           description: Bad request
         '401':
-          description: Not authorized
+          description: Unauthorized
       security:
         - bearerAuth: []
 components:
