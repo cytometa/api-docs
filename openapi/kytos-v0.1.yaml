@@ -1,0 +1,138 @@
+openapi: 3.0.3
+info:
+  title: Kytos integration API
+  description: This API is to receive Kytos Metrics in the Cytometa Cloud platform after processing the provided FCS data.
+  contact:
+    email: support@cytometa.com
+  version: "0.1"
+servers:
+  - url: https://cytometa.dev/api/
+    description: Cytometa staging environment, currently in use for PoC
+  - url: https://api.cytometa.cloud/
+    description: Cytomata production environment, not yet in use
+tags:
+  - name: Results
+paths:
+  /kytos/results:
+    post:
+      description: Endpoint to process the calculated metrics
+      operationId: PostResults
+      tags: 
+        - Results
+      requestBody:
+        description: New result set to process
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KytosResult'
+        required: true
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+        '401':
+          description: Not authorized
+      security:
+        - bearerAuth: []
+components:
+  schemas:
+    KytosResult:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique id to identify the result. When the result is updated and a new resultId is used a copy of the old result is kept. If the same resultId is used the result will be overwritten
+        sampleId:
+          type: string
+          format: uuid
+          description: Unique id to identify the sample. Will be published as meta data in the upload to S3 and, in the future, added to the FCS file itself
+        companyId:
+          type: string
+          example: "MyCompany"
+          description: Upfront agreed CompanyId to identify the company to which the FCS file belongs. Also used in the name of the FSC file
+        projectId:
+          type: string
+          example: "Project_XYZ"
+          description: Upfront agreed ProjectId to identify the project to which the FCS file belongs. Also used in the name of the FCS file
+        sampleDatetime:
+          type: string
+          format: date-time
+          example: "2023-10-24T19:59:12Z"
+          description: Date time when the sample was taken in UTC. Provided in the FCS file and the name of the FCS file
+        metrics:
+          type: array
+          items:
+            type: object
+            properties:
+              category:
+                type: string
+                enum:
+                  - QualityCheck
+                  - KytosMetric
+                description: Category to which the metric belongs. Currently two categories are defined. QualityCheck and KytosMetric
+              name:
+                type: string
+                description: Unique name to define the metric like TCC, ICC, etc.
+              value:
+                oneOf:
+                  - type: number
+                    format: double
+                  - type: integer
+                    format: int64
+                description: Numeric value of the metric. Could be a double or an int64
+              unit:
+                type: string
+                description: Optional unit for the metric like cells/ml
+            required:
+              - category
+              - name
+              - value
+            example:
+              - category: QualityCheck
+                name: QC1
+                value: 1.12
+              - category: KytosMetric
+                name: TCC
+                value: 133100
+                unit: cells/ml
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              name: 
+                type: string
+                description: Unique name to define the tag
+              value:
+                type: string
+                description: Value belonging to the tag
+            example:
+              - name: Image
+                value: RefImageNOP
+            required:
+              - name
+              - value                
+        createdDatetime:
+          type: string
+          format: date-time
+          example: "2023-10-24T20:23:14Z"
+          description: Date time when the result was created
+        updatedDatetime:
+          type: string
+          format: date-time
+          example: "2023-10-24T20:23:14Z"
+          description: Date time when the result was created or updated
+      required:
+        - id
+        - sampleId
+        - companyId
+        - projectId
+        - sampleDatetime
+        - metrics
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      description: Preshared API Key / Bearer token to use in the POC. Could change to OAuth2/JWT in the future
