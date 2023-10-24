@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Kytos integration API
-  description: This API is provided to Kytos to sent Kytos metrics to the Cytometa Cloud platform after processing the provided FCS data.
+  description: This API is provided to Kytos to sent Kytos calculated metrics to the Cytometa Cloud platform after processing the provided FCS data.
   contact:
     email: support@cytometa.com
   version: "0.1"
@@ -16,7 +16,7 @@ paths:
   /kytos/results:
     post:
       description: Endpoint to process the calculated Kytos metrics
-      operationId: PostResults
+      operationId: ProcessResults
       tags: 
         - Results
       requestBody:
