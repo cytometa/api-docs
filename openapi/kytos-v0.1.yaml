@@ -1,21 +1,21 @@
 openapi: 3.0.3
 info:
   title: Kytos integration API
-  description: This API is provided to Kytos to sent Kytos calculated metrics to the Cytometa Cloud platform after processing the provided FCS data.
+  description: This API is provided to Kytos to sent the calculated metrics back to the Cytometa Cloud platform after processing the provided FCS data.
   contact:
     email: support@cytometa.com
-  version: "0.1"
+  version: "v0.1"
 servers:
-  - url: https://cytometa.dev/api/
+  - url: https://cytometa.dev/
     description: Cytometa staging environment, currently in use for PoC
-  - url: https://api.cytometa.cloud/
-    description: Cytomata production environment, not yet in use
+  - url: https://cytometa.cloud/
+    description: Cytometa production environment, not yet in use
 tags:
   - name: Results
 paths:
-  /kytos/results:
+  /api/kytos/results:
     post:
-      description: Endpoint to process the calculated Kytos metrics
+      description: Endpoint provided to Kytos to sent the calculated metrics
       operationId: ProcessResults
       tags: 
         - Results
@@ -29,8 +29,6 @@ paths:
       responses:
         '201':
           description: Created
-        '204':
-          description: Updated
         '400':
           description: Bad request
         '401':
@@ -58,7 +56,7 @@ components:
           type: string
           example: "Project_XYZ"
           description: Upfront agreed ProjectId to identify the project to which the FCS file belongs. Also used in the name of the FCS file
-        sampleDatetime:
+        sampleDateTime:
           type: string
           format: date-time
           example: "2023-10-24T19:59:12Z"
@@ -116,12 +114,12 @@ components:
             required:
               - name
               - value                
-        createdDatetime:
+        createdDateTime:
           type: string
           format: date-time
           example: "2023-10-24T20:23:14Z"
           description: Date time when the result was created
-        updatedDatetime:
+        updatedDateTime:
           type: string
           format: date-time
           example: "2023-10-24T20:23:14Z"
@@ -131,10 +129,10 @@ components:
         - sampleId
         - companyId
         - projectId
-        - sampleDatetime
+        - sampleDateTime
         - metrics
   securitySchemes:
-    bearerAuth:            # arbitrary name for the security scheme
+    bearerAuth:
       type: http
       scheme: bearer
-      description: Preshared API Key / Bearer token to use in the POC. Could change to OAuth2/JWT in the future
+      description: Pre-shared API Key / Bearer token to use in the POC. Could change to OAuth2/JWT in the future
