@@ -50,10 +50,14 @@ components:
           description: Unique id to identify the sample. Will be published as meta data in the upload to S3 and, in the future, added to the FCS file itself
         companyId:
           type: string
+          minLength: 1
+          maxLength: 50
           example: "MyCompany"
           description: Upfront agreed CompanyId to identify the company to which the FCS file belongs. Also used in the name of the FSC file
         projectId:
           type: string
+          minLength: 1
+          maxLength: 50
           example: "Project_XYZ"
           description: Upfront agreed ProjectId to identify the project to which the FCS file belongs. Also used in the name of the FCS file
         sampleDateTime:
@@ -80,7 +84,6 @@ components:
           example:
             - name: Image
               value: RefImageNOP
-
         createdDateTime:
           type: string
           format: date-time
@@ -109,6 +112,8 @@ components:
           description: Category to which the metric belongs. Currently two categories are defined. QualityCheck and KytosMetric
         name:
           type: string
+          minLength: 1
+          maxLength: 50
           description: Unique name to define the metric like TCC, ICC, etc.
         value:
           oneOf:
@@ -124,20 +129,22 @@ components:
         - category
         - name
         - value
-
     KytosResultTag:
       type: object
       properties:
         name:
           type: string
+          minLength: 1
+          maxLength: 50
           description: Unique name to define the tag
         value:
           type: string
+          minLength: 1
+          maxLength: 255
           description: Value belonging to the tag
       required:
         - name
         - value
-
   securitySchemes:
     bearerAuth:
       type: http
