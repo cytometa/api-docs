@@ -17,7 +17,7 @@ paths:
     post:
       description: Endpoint provided to Kytos to sent the calculated metrics
       operationId: ProcessResults
-      tags: 
+      tags:
         - Results
       requestBody:
         description: New result set to process
@@ -64,45 +64,13 @@ components:
         metrics:
           type: array
           items:
-            type: object
-            properties:
-              category:
-                type: string
-                enum:
-                  - QualityCheck
-                  - KytosMetric
-                description: Category to which the metric belongs. Currently two categories are defined. QualityCheck and KytosMetric
-              name:
-                type: string
-                description: Unique name to define the metric like TCC, ICC, etc.
-              value:
-                oneOf:
-                  - type: number
-                    format: double
-                  - type: integer
-                    format: int64
-                description: Numeric value of the metric. Could be a double or an int64
-              unit:
-                type: string
-                description: Optional unit for the metric like cells/ml
-            required:
-              - category
-              - name
-              - value
-            example:
-              - category: QualityCheck
-                name: QC1
-                value: 1.12
-              - category: KytosMetric
-                name: TCC
-                value: 133100
-                unit: cells/ml
+            $ref: '#/components/schemas/KytosResultMetric'
         tags:
           type: array
           items:
             type: object
             properties:
-              name: 
+              name:
                 type: string
                 description: Unique name to define the tag
               value:
@@ -113,7 +81,7 @@ components:
                 value: RefImageNOP
             required:
               - name
-              - value                
+              - value
         createdDateTime:
           type: string
           format: date-time
@@ -131,6 +99,40 @@ components:
         - projectId
         - sampleDateTime
         - metrics
+    KytosResultMetric:
+      type: object
+      properties:
+        category:
+          type: string
+          enum:
+            - QualityCheck
+            - KytosMetric
+          description: Category to which the metric belongs. Currently two categories are defined. QualityCheck and KytosMetric
+        name:
+          type: string
+          description: Unique name to define the metric like TCC, ICC, etc.
+        value:
+          oneOf:
+            - type: number
+              format: double
+            - type: integer
+              format: int64
+          description: Numeric value of the metric. Could be a double or an int64
+        unit:
+          type: string
+          description: Optional unit for the metric like cells/ml
+      required:
+        - category
+        - name
+        - value
+      example:
+        - category: QualityCheck
+          name: QC1
+          value: 1.12
+        - category: KytosMetric
+          name: TCC
+          value: 133100
+          unit: cells/ml
   securitySchemes:
     bearerAuth:
       type: http
