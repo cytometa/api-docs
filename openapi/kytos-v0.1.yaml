@@ -65,23 +65,22 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/KytosResultMetric'
+          example:
+            - category: QualityCheck
+              name: QC1
+              value: 1.12
+            - category: KytosMetric
+              name: TCC
+              value: 133100
+              unit: cells/ml
         tags:
           type: array
           items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: Unique name to define the tag
-              value:
-                type: string
-                description: Value belonging to the tag
-            example:
-              - name: Image
-                value: RefImageNOP
-            required:
-              - name
-              - value
+            $ref: '#/components/schemas/KytosResultTag'
+          example:
+            - name: Image
+              value: RefImageNOP
+
         createdDateTime:
           type: string
           format: date-time
@@ -125,14 +124,20 @@ components:
         - category
         - name
         - value
-      example:
-        - category: QualityCheck
-          name: QC1
-          value: 1.12
-        - category: KytosMetric
-          name: TCC
-          value: 133100
-          unit: cells/ml
+
+    KytosResultTag:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Unique name to define the tag
+        value:
+          type: string
+          description: Value belonging to the tag
+      required:
+        - name
+        - value
+
   securitySchemes:
     bearerAuth:
       type: http
