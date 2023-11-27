@@ -124,6 +124,8 @@ components:
           description: Numeric value of the metric. Could be a double or an int64
         unit:
           type: string
+          minLength: 1
+          maxLength: 10
           description: Optional unit for the metric like cells/ml
       required:
         - category
